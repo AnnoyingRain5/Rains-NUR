@@ -21,4 +21,3 @@ python3Packages.buildPythonApplication rec {
         install -Dm755 ${./${pname}.py} $out/bin/${pname}
     '';
 }
-}
