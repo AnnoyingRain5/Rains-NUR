@@ -21,6 +21,16 @@ stdenv.mkDerivation rec {
   cmakeFlags = [];
   dontWrapQtApps = true;
 
+  postFixup = ''
+    echo "Adding SDL3 to RPATH of built libraries..."
+    # Iterate through all .so files and add SDL3's lib path to their RPATH
+    for libfile in $(find . -name "*.so"); do
+      if ! patchelf --print-rpath "$libfile" | grep -q "${sdl3}/lib"; then
+        echo "Patching RPATH of $libfile"
+        patchelf --set-rpath "$(patchelf --print-rpath "$libfile")${lib.makeLibraryPath [ sdl3 ]}" "$libfile"
+      fi
+    done
+  '';
   
   installPhase = ''
     mkdir -p $out/lib/obs-plugins
