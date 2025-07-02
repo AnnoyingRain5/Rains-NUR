@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, cmake, obs-studio, libsForQt5, libdrm, pkg-config, vulkan-headers, libGL, xorg, vulkan-loader, linuxKernel }:
+{ lib, stdenv, fetchFromGitHub, cmake, obs-studio, libsForQt5, libdrm, pkg-config, vulkan-headers, libGL, xorg, vulkan-loader, linuxKernel, sdl3 }:
 
 let
   # This is the directory that contains 'obs' and 'util'
@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ cmake pkg-config vulkan-headers libGL xorg.libxcb vulkan-loader linuxKernel.packages.linux_latest_libre.nvidia_x11 ];
-  buildInputs = [ obs-studio ];
+  buildInputs = [ obs-studio sdl3 ];
 
   cmakeFlags = [];
   dontWrapQtApps = true;
