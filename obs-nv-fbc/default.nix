@@ -1,4 +1,20 @@
-{ lib, stdenv, fetchFromGitHub, cmake, obs-studio, libsForQt5, libdrm, pkg-config, vulkan-headers, libGL, xorg, vulkan-loader, linuxKernel, sdl3 }:
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  cmake,
+  obs-studio,
+  libsForQt5,
+  libdrm,
+  pkg-config,
+  vulkan-headers,
+  libGL,
+  xorg,
+  vulkan-loader,
+  sdl3,
+  linuxKernel,
+  nvidia_x11 ? linuxKernel.packages.linux_latest_libre.nvidia_x11,
+}:
 
 let
   # This is the directory that contains 'obs' and 'util'
@@ -15,10 +31,21 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-w2Ph44DobSx4fwsU1UHevcuczeglrZ7ktuxlJdzeCVE=";
   };
 
-  nativeBuildInputs = [ cmake pkg-config vulkan-headers libGL xorg.libxcb vulkan-loader linuxKernel.packages.linux_latest_libre.nvidia_x11 ];
-  buildInputs = [ obs-studio sdl3 ];
+  nativeBuildInputs = [
+    cmake
+    pkg-config
+    vulkan-headers
+    libGL
+    xorg.libxcb
+    vulkan-loader
+    nvidia_x11
+  ];
+  buildInputs = [
+    obs-studio
+    sdl3
+  ];
 
-  cmakeFlags = [];
+  cmakeFlags = [ ];
   dontWrapQtApps = true;
 
   postFixup = ''
@@ -31,7 +58,7 @@ stdenv.mkDerivation rec {
       fi
     done
   '';
-  
+
   installPhase = ''
     mkdir -p $out/lib/obs-plugins
     cp libobs-nvfbc-pre.so $out/lib/obs-plugins/libobs-nvfbc-pre.so
